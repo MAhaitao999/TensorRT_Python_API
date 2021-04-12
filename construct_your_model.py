@@ -70,11 +70,15 @@ if __name__ == '__main__':
             # builder.max_workspace_size = 1 << 20
             # Populate the network using weights from the PyTorch model.
             network = populate_network(network, weights_path)
-            profile = builder.create_optimization_profile()  # 需要profile
+            profile_1 = builder.create_optimization_profile()  # 需要profile
+            profile_1.set_shape(network.get_input(0).name, (1, 1, 28, 28), (4, 1, 28, 28), (8, 1, 28, 28))
+            profile_2 = builder.create_optimization_profile()
+            profile_2.set_shape(network.get_input(0).name, (9, 1, 28, 28), (12, 1, 28, 28), (16, 1, 28, 28))
             config = builder.create_builder_config()         # 需要config
             config.max_workspace_size = 1 << 30              # workspace等需要在config中调整, 不再在builder中调整
-            profile.set_shape(network.get_input(0).name, (1, 1, 28, 28), (4, 1, 28, 28), (8, 1, 28, 28))
-            config.add_optimization_profile(profile)
+            config.add_optimization_profile(profile_1)       
+            config.add_optimization_profile(profile_2)       # 设置多个profile
+
             engine = builder.build_engine(network, config)
             with open('./mynet.engine', 'wb') as f:
                 f.write( engine.serialize() )
