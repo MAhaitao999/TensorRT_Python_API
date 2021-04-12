@@ -12,8 +12,8 @@ trtexec --onnx=test.onnx \
         --workspace=1600 \
         --explicitBatch \
         --optShapes=data:4x1x28x28 \
-        --maxShapes=data:8x4x28x28 \
-        --minShapes=data:1x4x28x28 \
-        --shapes=data:4x3x28x28 \
+        --maxShapes=data:8x1x28x28 \
+        --minShapes=data:1x1x28x28 \
+        --shapes=data:4x1x28x28 \
         --saveEngine=test.engine
 ```
